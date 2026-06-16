@@ -37,8 +37,14 @@ class LoginController
                     Usuario::setAlerta('error', 'El Usuario ya esta registrado');
                     $alertas = Usuario::getAlertas();
                 } else {
+                    //hashear password
+                    $usuario->hashPassword();
 
-                    //crear Nuevo Usuario
+                    //eliminar password2 (password temporal para validar)
+                    unset($usuario->password2);
+
+                    debuguear($usuario);
+                    //Crear nuevo usuario
                 }
             }
         }
