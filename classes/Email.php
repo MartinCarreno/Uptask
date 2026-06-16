@@ -42,4 +42,32 @@ class Email
         //Enviar el email
         $mail->send();
     }
+
+    public function enviarInstrucciones() {
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->Host = $_ENV['EMAIL_HOST'];
+        $mail->SMTPAuth = true;
+        $mail->Port = $_ENV['EMAIL_PORT'];
+        $mail->Username = $_ENV['EMAIL_USER'];
+        $mail->Password = $_ENV['EMAIL_PASSWORD'];
+
+        $mail->setFrom('cuentas@uptask.com');
+        $mail->addAddress('cuentas@uptask.com', 'uptask.com');
+        $mail->Subject = 'Restablecer Password';
+
+        $mail->isHTML(TRUE);
+        $mail->CharSet = 'UTF-8';
+
+        $contenido = '<html>';
+        $contenido .= "<p><strong>Hola " . $this->nombre . "</strong> Parece que has olvidado tu password, sigue el siguente enlace para recuperarlo</p>";
+        $contenido .= "<p>Presiona Aqui: <a href='http://localhost:3000/restablecer?token=" . $this->token . "'>Restablecer Password</a></p>";
+        $contenido .= "<p>Si tu no creaste esta cuenta puedes ignorar este mensaje</p>";
+        $contenido .= '</html>';
+
+        $mail->Body = $contenido;
+
+        //Enviar el email
+        $mail->send();
+    }
 }
