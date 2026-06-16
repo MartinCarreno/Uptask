@@ -41,16 +41,20 @@ class LoginController
         }
          //render para la vista
         $router->render('auth/olvide', [
-            'titulo' => 'Restablecer Contraseña'
+            'titulo' => 'Olvide Contraseña'
         ]);
     }
 
-    public static function restablecer() {
-        echo "Desde restablecer";
-
+    public static function restablecer(Router $router) {
+        
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }
+
+         //render para la vista
+        $router->render('auth/restablecer', [
+            'titulo' => 'Restablecer Contraseña'
+        ]);
     }
     public static function mensaje() {
         echo "Desde mensaje";
