@@ -43,8 +43,14 @@ class LoginController
                     //eliminar password2 (password temporal para validar)
                     unset($usuario->password2);
 
-                    debuguear($usuario);
+                    //Generar el token
+                    $usuario->crearToken();
+                    
                     //Crear nuevo usuario
+                    $resultado = $usuario->guardar();
+                    if($resultado) {
+                        header('Location: /mensaje');
+                    }
                 }
             }
         }
