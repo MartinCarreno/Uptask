@@ -8,3 +8,14 @@ CREATE TABLE `usuarios` (
   `confirmado` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--tabla proyectos
+CREATE TABLE `proyectos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `proyecto` varchar(60) DEFAULT NULL,
+  `url` varchar(32) DEFAULT NULL,
+  `propietarioId` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `proyectos_usuarios_FK` (`propietarioId`),
+  CONSTRAINT `proyectos_usuarios_FK` FOREIGN KEY (`propietarioId`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
