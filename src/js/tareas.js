@@ -57,11 +57,17 @@
             btnEstadoTarea.classList.add(`${estados[tarea.estado].toLowerCase()}`)
             btnEstadoTarea.textContent = estados[tarea.estado];
             btnEstadoTarea.dataset.estadoTarea = tarea.estado;
+            btnEstadoTarea.ondblclick = function() {
+                cambiarEstadoTarea({...tarea});
+            }
 
             const btnEliminarTarea = document.createElement('BUTTON');
             btnEliminarTarea.classList.add('eliminar-tarea');
             btnEliminarTarea.dataset.idTarea = tarea.id;
             btnEliminarTarea.textContent = 'Eliminar';
+            btnEliminarTarea.ondblclick = function() {
+                confirmarEliminarTarea({...tarea});
+            }
 
             opcionesDiv.appendChild(btnEstadoTarea);
             opcionesDiv.appendChild(btnEliminarTarea);
@@ -179,7 +185,7 @@
 
                 //agregar el objeto de tareas al global de tareas
                 const tareaObj = {
-                    id: String(resultado.id),
+                    id: String(resultado.resultado),
                     nombre: tarea,
                     estado: 0,
                     proyectoId: resultado.proyectoId
@@ -193,6 +199,96 @@
 
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    function cambiarEstadoTarea(tarea) {
+        const nuevoEstado = tarea.estado === "1" ? "0" : "1";
+        tarea.estado = nuevoEstado; 
+        actualizarTarea(tarea);
+    }
+
+    async function actualizarTarea(tarea) {
+        const { estado, id, nombre, proyectoId } = tarea;
+        
+        const datos = new FormData();
+        datos.append('id', id);
+        datos.append('nombre', nombre);
+        datos.append('estado', estado);
+        datos.append('proyectoId', obtenerProyecto());
+        
+        try {
+            const url = 'http://localhost:3000/api/tarea/actualizar';
+
+            const respuesta = await fetch(url, {
+                method: 'POST',
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+
+            if(resultado.respuesta.tipo === 'exito'){
+                mostrarAlerta(resultado.respuesta.mensaje, resultado.respuesta.tipo, document.querySelector('.contenedor-nueva-tarea'));
+                
+                tareas = tareas.map(tareaMemoria => {
+                    if(tareaMemoria.id === id){
+                        tareaMemoria.estado = estado;
+                    }
+
+                    return tareaMemoria;
+                });
+                
+                mostrarTareas();
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function confirmarEliminarTarea(tarea) {
+        Swal.fire({
+            title: "Eliminar Tarea?",
+            showCancelButton: true,
+            confirmButtonText: "Si",
+            cancelButtonText: 'No'
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                eliminarTarea(tarea);
+            }
+        });
+    }
+
+    async function eliminarTarea(tarea) {
+        
+        const { estado, id, nombre } = tarea;
+        
+        const datos = new FormData();
+        datos.append('id', id);
+        datos.append('nombre', nombre);
+        datos.append('estado', estado);
+        datos.append('proyectoId', obtenerProyecto());
+        
+        try {
+            const url = 'http://localhost:3000/api/tarea/eliminar';
+            const respuesta = await fetch(url, {
+                method: 'POST',
+                body: datos
+            })
+            
+            const resultado = await respuesta.json();
+            if(resultado.resultado) {
+                //mostrarAlerta(resultado.mensaje, resultado.tipo, document.querySelector('.contenedor-nueva-tarea'));
+
+                Swal.fire('Eliminado!', resultado.mensaje, 'success');
+
+                tareas = tareas.filter( tareaMemoria => tareaMemoria.id !== tarea.id);
+                mostrarTareas();
+
+            }
+
+        } catch (error) {
+            console.log(error)
         }
     }
 
