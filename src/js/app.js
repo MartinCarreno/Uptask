@@ -17,3 +17,13 @@ if(cerrarMenuBtn) {
         }, 1000);
     });
 }
+
+// Elimina la clase de mostrar en tamaño de tablet y mayores
+const anchoPantalla = document.body.clientHeight;
+
+window.addEventListener('resize', function(){
+    const anchoPantalla = document.body.clientHeight;
+    if(anchoPantalla >= 768) {
+        sidebar.classList.remove('mostrar');
+    }
+});
