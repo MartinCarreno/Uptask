@@ -3,6 +3,8 @@
 <div class="contenedor-sm">
     <?php include_once __DIR__ . '/../templates/alertas.php'; ?>
 
+    <a href="/cambiar-password" class="enlace">Cambiar Password</a>
+
     <form class="formulario" method="POST" action="/perfil">
         <div class="campo">
             <label for="nombre">Nombre</label>
@@ -16,7 +18,7 @@
         <div class="campo">
             <label for="email">Email</label>
             <input 
-                type="text"
+                type="email"
                 value="<?php echo $usuario->email; ?>"
                 name="email"
                 placeholder="Tu email"
