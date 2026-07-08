@@ -127,7 +127,30 @@ class DashboardController
             $alertas = $usuario->nuevo_password();
 
             if(empty($alertas)){
-                
+                $resultado = $usuario->comprobar_password();
+
+                if($resultado) {
+                    $usuario->password = $usuario->password_nuevo;
+
+                    //eliminar propiedades no necesarias
+                    unset($usuario->password_actual);
+                    unset($usuario->password_nuevo);
+
+                    //hashear el nuevo password
+                    $usuario->hashPassword();
+
+                    // Actualizar
+                    $resultado = $usuario->guardar();
+
+                    if($resultado) {
+                        Usuario::setAlerta('exito', 'Password Guardado Correctamente');
+                        $alertas = $usuario->getAlertas();
+
+                    }
+                } else {
+                    Usuario::setAlerta('error', 'Password Incorrecto');
+                    $alertas = $usuario->getAlertas();
+                }
             }
         }
         
