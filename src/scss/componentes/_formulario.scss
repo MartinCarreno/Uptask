@@ -4,21 +4,35 @@
 
 .formulario {
     margin-top: 5rem;
+
     .campo {
         display: flex;
         align-items: center;
         margin-bottom: 2rem;
+
         label {
             flex: 0 0 10rem;
         }
-        input{
+
+        input:not([type="submit"]),
+        textarea,
+        select {
             flex: 1;
-            padding: 2rem;
+            padding: 1.5rem 2rem;
             border: none;
-            background-color: color.adjust(v.$gris, $lightness: 40%)
+            background-color: color.adjust(v.$gris, $lightness: 40%);
+            font-family: v.$fuente_textos;
+            font-size: 1.6rem;
+            color: v.$negro;
+
+            &:focus {
+                outline: 2px solid v.$indigo;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 10rem;
         }
     }
-    
-
-
 }

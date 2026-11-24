@@ -1,29 +1,50 @@
 <?php
 
-
 namespace Model;
-
-use Model\ActiveRecord;
 
 class Proyecto extends ActiveRecord
 {
     protected static $tabla = 'proyectos';
-    protected static $columnasDB = ['id', 'proyecto', 'url', 'propietarioId'];
+    protected static $columnasDB = ['id', 'proyecto', 'cliente', 'descripcion', 'url', 'propietarioId'];
 
-    public function __construct($args=[]) {
+    public $id;
+    public $proyecto;
+    public $cliente;
+    public $descripcion;
+    public $url;
+    public $propietarioId;
+    public $creado_en;
+    public $actualizado_en;
+    public $rolId;
+
+    public function __construct($args = [])
+    {
         $this->id = $args['id'] ?? null;
-        $this->proyecto = $args['proyecto'] ?? null;
-        $this->url = $args['url'] ?? null;
+        $this->proyecto = trim($args['proyecto'] ?? '');
+        $this->cliente = trim($args['cliente'] ?? '');
+        $this->descripcion = isset($args['descripcion']) && trim($args['descripcion']) !== ''
+            ? trim($args['descripcion'])
+            : null;
+        $this->url = $args['url'] ?? '';
         $this->propietarioId = $args['propietarioId'] ?? null;
+        $this->creado_en = $args['creado_en'] ?? null;
+        $this->actualizado_en = $args['actualizado_en'] ?? null;
+        $this->rolId = $args['rolId'] ?? null;
     }
 
-    public function validarProyecto() {
-        if(!$this->proyecto) {
+    public function validarProyecto(): array
+    {
+        if (!$this->proyecto) {
             self::$alertas['error'][] = 'El nombre del Proyecto es Obligatorio';
         }
-
-        if(strlen($this->proyecto) > 60) {
-            self::$alertas['error'][] = 'El nombre del Proyecto debe ser menos de 60 caracteres';
+        if (strlen($this->proyecto) > 80) {
+            self::$alertas['error'][] = 'El nombre del Proyecto debe tener menos de 80 caracteres';
+        }
+        if (!$this->cliente) {
+            self::$alertas['error'][] = 'El nombre del Cliente es Obligatorio';
+        }
+        if (strlen($this->cliente) > 80) {
+            self::$alertas['error'][] = 'El nombre del Cliente debe tener menos de 80 caracteres';
         }
 
         return self::$alertas;
